@@ -102,11 +102,16 @@ jobs:
           --docker-email=any@email.com \
           --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Deploy Helm Chart
-        uses: bitovi/github-actions-deploy-eks-helm@v1.2.8
+      - name: Install Helm
+        uses: azure/setup-helm@v3
         with:
-          cluster-name: ${{ env.GKE_CLUSTER }}
-          chart-path: helm/vprofilecharts
-          namespace: default
-          values: appimage=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/vprofile-repo/vprofileapp,apptag=${{ github.run_number }}
-          name: vprofile-stack
+          version: v3.13.3
+
+      - name: Deploy Helm Chart to GKE
+        env:
+          CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.auth.outputs.credentials_file_path }}
+        run: |
+          helm upgrade --install vprofile-stack helm/vprofilecharts \
+          --namespace default \
+          --set appimage=${{ env.IMAGE_REPO }} \
+          --set apptag=${{ github.run_number }}
