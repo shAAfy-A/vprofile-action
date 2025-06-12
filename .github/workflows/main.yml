@@ -96,7 +96,7 @@ jobs:
           kubectl create secret docker-registry artifact-registry-creds \
           --docker-server=us-central1-docker.pkg.dev \
           --docker-username=_json_key \
-          --docker-password="$(echo '${{ secrets.GCP_SA_KEY }}' | base64 -d)" \
+          --docker-password='${{ secrets.GCP_SA_KEY }}' \
           --docker-email=any@email.com \
           --dry-run=client -o yaml | kubectl apply -f -
 
