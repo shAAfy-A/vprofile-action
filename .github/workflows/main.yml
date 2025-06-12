@@ -3,7 +3,7 @@ on: workflow_dispatch
 env:
   GCP_REGION: us-central1
   GKE_CLUSTER: vprofile-gke
-  GCR_REPOSITORY: ${{ secrets.GCP_PROJECT_ID }}/vprofileapp
+  IMAGE_REPO: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/vprofile-repo/vprofileapp
 
 jobs:
   Testing:
