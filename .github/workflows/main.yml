@@ -88,14 +88,15 @@ jobs:
             --region ${{ env.GCP_REGION }} \
             --project ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Create Image Pull Secret
+      - name: Create Image Pull Secret for Artifact Registry
         run: |
-          kubectl create secret docker-registry gcr-json-key \
-            --docker-server=gcr.io \
-            --docker-username=_json_key \
-            --docker-password="$(echo ${{ secrets.GCP_SA_KEY }} | base64 -d)" \
-            --docker-email=any@email.com \
-            --dry-run=client -o yaml | kubectl apply -f -
+          gcloud components install kubectl
+          kubectl create secret docker-registry artifact-registry-creds \
+          --docker-server=us-central1-docker.pkg.dev \
+          --docker-username=_json_key \
+          --docker-password="$(echo '${{ secrets.GCP_SA_KEY }}' | base64 -d)" \
+          --docker-email=any@email.com \
+          --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy Helm Chart
         uses: bitovi/github-actions-deploy-eks-helm@v1.2.8
@@ -103,5 +104,5 @@ jobs:
           cluster-name: ${{ env.GKE_CLUSTER }}
           chart-path: helm/vprofilecharts
           namespace: default
-          values: appimage=gcr.io/${{ env.GCR_REPOSITORY }},apptag=${{ github.run_number }}
+          values: appimage=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/vprofile-repo/vprofileapp,apptag=${{ github.run_number }}
           name: vprofile-stack
