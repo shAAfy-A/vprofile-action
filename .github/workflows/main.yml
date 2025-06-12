@@ -58,6 +58,10 @@ jobs:
       - name: Code checkout
         uses: actions/checkout@v4
 
+
+      - name: Configure Docker to use gcloud as credential helper
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
       - name: Build and Push to GCR
         run: |
           IMAGE_URI=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/vprofile-repo/vprofileapp:${{ github.run_number }}
