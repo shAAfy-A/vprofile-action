@@ -83,6 +83,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get GKE Credentials
+        env:
+           CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.auth.outputs.credentials_file_path }}
         run: |
           gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} \
             --region ${{ env.GCP_REGION }} \
