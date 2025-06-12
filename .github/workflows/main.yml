@@ -91,6 +91,8 @@ jobs:
             --project ${{ secrets.GCP_PROJECT_ID }}
 
       - name: Create Image Pull Secret for Artifact Registry
+        env:
+           CLOUDSDK_AUTH_CREDENTIAL_FILE_OVERRIDE: ${{ steps.auth.outputs.credentials_file_path }}
         run: |
           gcloud components install kubectl
           kubectl create secret docker-registry artifact-registry-creds \
