@@ -59,8 +59,9 @@ jobs:
 
       - name: Build and Push to GCR
         run: |
-          docker build -t gcr.io/${{ env.GCR_REPOSITORY }}:${{ github.run_number }} .
-          docker push us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/vprofile-repo/vprofileapp:${{ github.run_number }}
+          IMAGE_URI=us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/vprofile-repo/vprofileapp:${{ github.run_number }}
+          docker build -t $IMAGE_URI .
+          docker push $IMAGE_URI
 
   DeployToGKE:
     needs: BUILD_AND_PUBLISH
