@@ -10,7 +10,7 @@ spec:
   - host: vprofile.7amza2023.online
     http:
       paths:
-      - path: /
+      - path: /vprofile
         pathType: Prefix
         backend:
           service:
